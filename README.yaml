@@ -1,34 +1,36 @@
+
+
 ---
 #
 # This is the canonical configuration for the `README.md`
 # Run `make readme` to rebuild the `README.md`
 #
 
+
 # Name of this project
-name: Terraform AZURE VNET
+name: Terraform AZURE PRIVATE DNS RESOLVER
 
 # License of this project
 license: "APACHE"
 
 # Canonical GitHub repo
-github_repo: clouddrove/terraform-azure-vnet
+github_repo: clouddrove/terraform-azure-private-dns-resolver
 
 # Badges to display
 badges:
   - name: "Latest Release"
-    image: "https://img.shields.io/github/release/clouddrove/terraform-azure-vnet.svg"
-    url: "https://github.com/clouddrove/terraform-azure-vnet/releases/latest"
+    image: "https://img.shields.io/github/release/clouddrove/terraform-azure-private-dns-resolver.svg"
+    url: "https://github.com/clouddrove/terraform-azure-private-dns-resolver/releases/latest"
   - name: "tfsec"
-    image: "https://github.com/clouddrove/terraform-azure-vnet/actions/workflows/tfsec.yml/badge.svg"
-    url: "https://github.com/clouddrove/terraform-azure-vnet/actions/workflows/tfsec.yml"
+    image: "https://github.com/clouddrove/terraform-azure-private-dns-resolver/actions/workflows/tfsec.yml/badge.svg"
+    url: "https://github.com/clouddrove/terraform-azure-private-dns-resolver/actions/workflows/tfsec.yml"
   - name: "Licence"
     image: "https://img.shields.io/badge/License-APACHE-blue.svg"
     url: "LICENSE.md"
 
 #  description of this project
 description: |-
-  Terraform module to create VIRTUAL-NETWORK resource on AZURE.
-
+  Terraform module to create Private DNS Resolver resource on AZURE.
 # extra content
 include:
   - "terraform.md"
@@ -36,41 +38,24 @@ include:
 # How to use this project
 # yamllint disable rule:line-length
 usage: |-
-  ### Basic Example
-   ```hcl
-     module "vnet" {
-     source                 = "clouddrove/vnet/azure"
-     name                   = local.name
-     environment            = local.environment
-     resource_group_name    = "testsg"
-     location               = "NorthEurope"
-     address_space          = "10.0.0.0/16"
-     enable_network_watcher = false # To be set true when network security group flow logs are to be tracked and network watcher with specific name is to be deployed.
-     }
-   ```
-  ### Complete Example
-   ```hcl
-     module "vnet" {
-     source                 = "clouddrove/vnet/azure"
-     name                   = local.name
-     environment            = local.environment
-     resource_group_name    = module.resource_group.resource_group_name
-     location               = module.resource_group.resource_group_location
-     address_space          = "10.0.0.0/16"
-     enable_ddos_pp         = false
-     enable_network_watcher = false # To be set true when network security group flow logs are to be tracked and network watcher with specific name is to be deployed.
-     }
-   ```
-   ### vnet_with_existing_ddos_id Example
-   ```hcl
-     module "vnet" {
-     source                 = "clouddrove/vnet/azure"
-     name                   = local.name
-     environment            = local.environment
-     resource_group_name    = module.resource_group.resource_group_name
-     location               = module.resource_group.resource_group_location
-     address_space          = "10.0.0.0/16"
-     existing_ddos_pp       = "/subscriptions/068245d4-3c94-42fe-9c4d-9e5e1cabc60c/resourceGroups/"
-     enable_network_watcher = false
-     }
-   ```
+  ### Simple Example
+  Here is an example of how you can use this module in your inventory structure:
+  ### private-dns-resolver
+  ```hcl
+    module "dns-private-resolver" {
+      source              = "../.."
+      name                = local.name
+      environment         = local.environment
+      resource_group_name = module.resource_group.resource_group_name
+      location            = module.resource_group.resource_group_location
+
+      virtual_network_id = module.vnet.vnet_id
+      dns_resolver_inbound_endpoints = [
+        # There is currently only support for two Inbound endpoints per Private Resolver.
+        {
+          inbound_endpoint_name = "inbound"
+          inbound_subnet_id     = module.subnet.default_subnet_id[0]
+        }
+      ]
+    }
+  ```

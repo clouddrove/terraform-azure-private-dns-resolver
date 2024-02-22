@@ -12,9 +12,9 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 3
     assignees:
-    - "clouddrove-ci"
+      - "clouddrove-ci"
     reviewers:
-    - "approvers"
+      - "approvers"
 
   - package-ecosystem: "terraform" # See documentation for possible values
     directory: "/" # Location of package manifests

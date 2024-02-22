@@ -4,20 +4,22 @@
 
 
 <h1 align="center">
-    Terraform AZURE VNET
+    Terraform AZURE PRIVATE DNS RESOLVER
+
+
 </h1>
 
 <p align="center" style="font-size: 1.2rem;"> 
-    Terraform module to create VIRTUAL-NETWORK resource on AZURE.
+    Terraform module to create Private DNS Resolver resource on AZURE.
      </p>
 
 <p align="center">
 
-<a href="https://github.com/clouddrove/terraform-azure-vnet/releases/latest">
-  <img src="https://img.shields.io/github/release/clouddrove/terraform-azure-vnet.svg" alt="Latest Release">
+<a href="https://github.com/clouddrove/terraform-azure-private-dns-resolver/releases/latest">
+  <img src="https://img.shields.io/github/release/clouddrove/terraform-azure-private-dns-resolver.svg" alt="Latest Release">
 </a>
-<a href="https://github.com/clouddrove/terraform-azure-vnet/actions/workflows/tfsec.yml">
-  <img src="https://github.com/clouddrove/terraform-azure-vnet/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
+<a href="https://github.com/clouddrove/terraform-azure-private-dns-resolver/actions/workflows/tfsec.yml">
+  <img src="https://github.com/clouddrove/terraform-azure-private-dns-resolver/actions/workflows/tfsec.yml/badge.svg" alt="tfsec">
 </a>
 <a href="LICENSE.md">
   <img src="https://img.shields.io/badge/License-APACHE-blue.svg" alt="Licence">
@@ -27,13 +29,13 @@
 </p>
 <p align="center">
 
-<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/terraform-azure-vnet'>
+<a href='https://facebook.com/sharer/sharer.php?u=https://github.com/clouddrove/terraform-azure-private-dns-resolver'>
   <img title="Share on Facebook" src="https://user-images.githubusercontent.com/50652676/62817743-4f64cb80-bb59-11e9-90c7-b057252ded50.png" />
 </a>
-<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+AZURE+VNET&url=https://github.com/clouddrove/terraform-azure-vnet'>
+<a href='https://www.linkedin.com/shareArticle?mini=true&title=Terraform+AZURE+PRIVATE+DNS+RESOLVER&url=https://github.com/clouddrove/terraform-azure-private-dns-resolver'>
   <img title="Share on LinkedIn" src="https://user-images.githubusercontent.com/50652676/62817742-4e339e80-bb59-11e9-87b9-a1f68cae1049.png" />
 </a>
-<a href='https://twitter.com/intent/tweet/?text=Terraform+AZURE+VNET&url=https://github.com/clouddrove/terraform-azure-vnet'>
+<a href='https://twitter.com/intent/tweet/?text=Terraform+AZURE+PRIVATE+DNS+RESOLVER&url=https://github.com/clouddrove/terraform-azure-private-dns-resolver'>
   <img title="Share on Twitter" src="https://user-images.githubusercontent.com/50652676/62817740-4c69db00-bb59-11e9-8a79-3580fbbf6d5c.png" />
 </a>
 
@@ -62,47 +64,30 @@ This module has a few dependencies:
 ## Examples
 
 
-**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-azure-vnet/releases).
+**IMPORTANT:** Since the `master` branch used in `source` varies based on new modifications, we suggest that you use the release versions [here](https://github.com/clouddrove/terraform-azure-private-dns-resolver/releases).
 
 
-### Basic Example
- ```hcl
-   module "vnet" {
-   source                 = "clouddrove/vnet/azure"
-   name                   = local.name
-   environment            = local.environment
-   resource_group_name    = "testsg"
-   location               = "NorthEurope"
-   address_space          = "10.0.0.0/16"
-   enable_network_watcher = false # To be set true when network security group flow logs are to be tracked and network watcher with specific name is to be deployed.
-   }
- ```
-### Complete Example
- ```hcl
-   module "vnet" {
-   source                 = "clouddrove/vnet/azure"
-   name                   = local.name
-   environment            = local.environment
-   resource_group_name    = module.resource_group.resource_group_name
-   location               = module.resource_group.resource_group_location
-   address_space          = "10.0.0.0/16"
-   enable_ddos_pp         = false
-   enable_network_watcher = false # To be set true when network security group flow logs are to be tracked and network watcher with specific name is to be deployed.
-   }
- ```
- ### vnet_with_existing_ddos_id Example
- ```hcl
-   module "vnet" {
-   source                 = "clouddrove/vnet/azure"
-   name                   = local.name
-   environment            = local.environment
-   resource_group_name    = module.resource_group.resource_group_name
-   location               = module.resource_group.resource_group_location
-   address_space          = "10.0.0.0/16"
-   existing_ddos_pp       = "/subscriptions/068245d4-3c94-42fe-9c4d-9e5e1cabc60c/resourceGroups/"
-   enable_network_watcher = false
-   }
- ```
+### Simple Example
+Here is an example of how you can use this module in your inventory structure:
+### private-dns-resolver
+```hcl
+  module "dns-private-resolver" {
+    source              = "../.."
+    name                = local.name
+    environment         = local.environment
+    resource_group_name = module.resource_group.resource_group_name
+    location            = module.resource_group.resource_group_location
+
+    virtual_network_id = module.vnet.vnet_id
+    dns_resolver_inbound_endpoints = [
+      # There is currently only support for two Inbound endpoints per Private Resolver.
+      {
+        inbound_endpoint_name = "inbound"
+        inbound_subnet_id     = module.subnet.default_subnet_id[0]
+      }
+    ]
+  }
+```
 
 
 
@@ -146,9 +131,9 @@ You need to run the following command in the testing folder:
 
 
 ## Feedback 
-If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-azure-vnet/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
+If you come accross a bug or have any feedback, please log it in our [issue tracker](https://github.com/clouddrove/terraform-azure-private-dns-resolver/issues), or feel free to drop us an email at [hello@clouddrove.com](mailto:hello@clouddrove.com).
 
-If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-azure-vnet)!
+If you have found it worth your time, go ahead and give us a ★ on [our GitHub](https://github.com/clouddrove/terraform-azure-private-dns-resolver)!
 
 ## About us
 

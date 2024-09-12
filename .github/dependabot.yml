@@ -6,16 +6,6 @@
 version: 2
 updates:
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 3
-    assignees:
-      - "clouddrove-ci"
-    reviewers:
-      - "approvers"
-
   - package-ecosystem: "terraform" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
@@ -30,7 +20,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "/_example/basic" # Location of package manifests
+    directory: "/examples/basic" # Location of package manifests
     schedule:
       interval: "weekly"
     # Add assignees
@@ -43,7 +33,7 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: "terraform" # See documentation for possible values
-    directory: "/_example/complete" # Location of package manifests
+    directory: "/examples/complete" # Location of package manifests
     schedule:
       interval: "weekly"
     # Add assignees

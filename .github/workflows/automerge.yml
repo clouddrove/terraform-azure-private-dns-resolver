@@ -8,5 +8,5 @@
       secrets:
         GITHUB: ${{ secrets.GITHUB }}
       with:
-        tfcheck: 'tf-checks-aws-managed-example / Check code format'
+        tfcheck: 'complete-example / Check code format'
   ...

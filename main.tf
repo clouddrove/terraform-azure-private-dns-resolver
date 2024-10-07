@@ -1,5 +1,5 @@
 ##-----------------------------------------------------------------------------
-## Locals declaration 
+## Locals declaration
 ##-----------------------------------------------------------------------------
 locals {
   inbound_endpoint_map  = { for inboundendpoint in var.dns_resolver_inbound_endpoints : inboundendpoint.inbound_endpoint_name => inboundendpoint }

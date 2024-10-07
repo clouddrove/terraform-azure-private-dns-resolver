@@ -20,4 +20,3 @@
 | Name | Description |
 |------|-------------|
 | dns\_resolver | n/a |
-
